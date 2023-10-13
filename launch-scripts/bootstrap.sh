@@ -148,6 +148,8 @@ TEMPLATE_INFRA_REPO="platform-template"
 TEMPLATE_COMMON_SETUP="common-setup"
 TEMPLATE_ACM_REPO="acm-template"
 ACM_REPO="acm-${INFRA_SETUP_REPO}"
+TEMPLATE_FLEET_SCOPE_REPO="fleet-scope-template"
+FLEET_SCOPE_REPO="fleet-scope-repo"
 TF_MODULES="terraform-modules"
 TIMESTAMP=$(date "+%Y%m%d%H%M%S")
 SA_FOR_API_KEY="api-key-sa-${TIMESTAMP}"
@@ -160,6 +162,7 @@ PLAN_TRIGGER_NAME="tf-plan"
 APPLY_TRIGGER_NAME="tf-apply"
 INFRA_TRIGGER_NAME="create-infra"
 COMMON_TRIGGER_NAME="common-setup-trigger"
+FLEET_SCOPE_TRIGGER="create-fleet-scope"
 APP_TEMPLATES=$(ls ${BASE_DIR} | grep  -- "app-template-")
 APP_INFRA_TEMPLATE="infra-template"
 TIMESTAMP=$(date "+%Y%m%d%H%M%S")
@@ -281,7 +284,7 @@ create_webhook () {
     if [ "${trigger}" = "${TEAM_TRIGGER_NAME}" ]; then
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${TEAM_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-team-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_TEAM_NAME=\$(body.message.team)'"
     elif [ "${trigger}" = "${APP_TRIGGER_NAME}" ]; then
-        print_and_execute "gcloud alpha builds triggers create webhook --name=\"${APP_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-app-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_APP_NAME=\$(body.message.app),_APP_RUNTIME=\$(body.message.runtime),_INFRA_PROJECT_ID=${project_id},_REGION=${REGION},_TRIGGER_TYPE=\$(body.message.trigger_type),_GITHUB_TEAM=\$(body.message.github_team),_FOLDER_ID=${FOLDER_ID}'"
+        print_and_execute "gcloud alpha builds triggers create webhook --name=\"${APP_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-app-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_APP_NAME=\$(body.message.app),_APP_RUNTIME=\$(body.message.runtime),_INFRA_PROJECT_ID=${project_id},_REGION=${REGION},_TRIGGER_TYPE=\$(body.message.trigger_type),_GITHUB_TEAM=\$(body.message.github_team),_SCOPE="",_FOLDER_ID=${FOLDER_ID}'"
     elif [ "${trigger}" = "${PLAN_TRIGGER_NAME}" ]; then
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${PLAN_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/tf-plan-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo}'"
     elif [ "${trigger}" = "${APPLY_TRIGGER_NAME}" ]; then
@@ -290,12 +293,14 @@ create_webhook () {
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${INFRA_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/cloudbuild-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REF=\$(body.ref),_REPO=\$(body.repository.full_name),_COMMIT_MSG=\$(body.head_commit.message)'  --subscription-filter='(!_COMMIT_MSG.matches(\"IGNORE\"))'"
     elif [ "${trigger}" = "${COMMON_TRIGGER_NAME}" ]; then
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${COMMON_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/cloudbuild-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REF=\$(body.ref),_REPO=\$(body.repository.full_name),_COMMIT_MSG=\$(body.head_commit.message)'  --subscription-filter='(!_COMMIT_MSG.matches(\"IGNORE\"))'"
+    elif [ "${trigger}" = "${FLEET_SCOPE_TRIGGER}" ]; then
+        print_and_execute "gcloud alpha builds triggers create webhook --name=\"${FLEET_SCOPE_TRIGGER}\"  --inline-config=\"${TEMP_DIR}/${repo}/cloudbuild-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REF=\$(body.ref),_REPO=\$(body.repository.full_name),_COMMIT_MSG=\$(body.head_commit.message)'  --subscription-filter='(!_COMMIT_MSG.matches(\"IGNORE\"))'"
     else
         title_no_wait "Invalid trigger name passed"
         print_and_execute "exit 1"
     fi
     ## Retrieve the URL
-    if [ "${trigger}" = "${INFRA_TRIGGER_NAME}" ] || [ "${trigger}" = "${COMMON_TRIGGER_NAME}" ]; then
+    if [ "${trigger}" = "${INFRA_TRIGGER_NAME}" ] || [ "${trigger}" = "${COMMON_TRIGGER_NAME}" || "${trigger}" = "${FLEET_SCOPE_TRIGGER}" ]; then
         WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${project_id}/triggers/${trigger}:webhook?key=${API_KEY}&secret=${SECRET_VALUE}"
 
         title_no_wait "Creating a github trigger ..."
@@ -545,7 +550,7 @@ else
     echo "The repo ${TEMPLATE_COMMON_SETUP} already exists, not creating it"
 fi
 
-title_no_wait "Cloning recently created infra repo ${TEMPLATE_COMMON_SETUP}..."
+title_no_wait "Cloning recently created common setup repo ${TEMPLATE_COMMON_SETUP}..."
 print_and_execute "rm -rf ${TEMP_DIR}/${TEMPLATE_COMMON_SETUP} && git clone  https://${GITHUB_USER}:${TOKEN}@github.com/${GITHUB_ORG}/${TEMPLATE_COMMON_SETUP} ${TEMP_DIR}/${TEMPLATE_COMMON_SETUP}"
 if [[ -d ${BASE_DIR}/${TEMPLATE_COMMON_SETUP} ]]; then
     print_and_execute "cd ${TEMP_DIR}/${TEMPLATE_COMMON_SETUP}"
@@ -557,6 +562,73 @@ else
     title_no_wait "Can not find ${BASE_DIR}/${TEMPLATE_COMMON_SETUP}. Exiting"
     print_and_execute "exit 1"
 fi
+
+# Creating fleet scope repo in your org and committing the code from template to it
+title_no_wait "Checking if ${FLEET_SCOPE_REPO} already exists..."
+repo_id_exists=$(curl -s -H "Authorization: token ${TOKEN}" -H "Accept: application/json" "https://api.github.com/repos/${GITHUB_ORG}/${FLEET_SCOPE_REPO}" | jq '.id')
+if [ ${repo_id_exists} = "null" ]; then
+    title_no_wait "${FLEET_SCOPE_REPO} does not exist. Creating it..."
+    print_and_execute "repo_id=$(curl -s -H "Authorization: token ${TOKEN}" -H "Accept: application/json" \
+        -d "{ \
+            \"name\": \"${FLEET_SCOPE_REPO}\", \
+            \"private\": true \
+        }" \
+    -X POST https://api.github.com/orgs/${GITHUB_ORG}/repos | jq '.id')"
+
+    sleep 5
+    if [ ${repo_id} = "null" ]; then
+        echo "Unable to create git repo.Exiting"
+        exit 1
+    else
+        grep -q "export FLEET_SCOPE_REPO=.*" ${LOG_DIR}/vars.sh || echo -e "export FLEET_SCOPE_REPO=${FLEET_SCOPE_REPO}" >> ${LOG_DIR}/vars.sh
+    fi
+else
+    echo "The repo ${FLEET_SCOPE_REPO} already exists, not creating it"
+fi
+title_no_wait "Cloning recently created fleet scope repo..."
+print_and_execute "rm -rf ${TEMP_DIR}/${FLEET_SCOPE_REPO} && git clone  https://${GITHUB_USER}:${TOKEN}@github.com/${GITHUB_ORG}/${FLEET_SCOPE_REPO} ${TEMP_DIR}/${FLEET_SCOPE_REPO}"
+if [[ -d ${BASE_DIR}/${TEMPLATE_FLEET_SCOPE_REPO} ]]; then
+    print_and_execute "cd ${TEMP_DIR}/${FLEET_SCOPE_REPO}"
+    print_and_execute "git checkout dev 2>/dev/null || git checkout -b dev"
+    print_and_execute "cp -r ${BASE_DIR}/${TEMPLATE_FLEET_SCOPE_REPO}/* ."
+    print_and_execute "git add . && git commit -m \"Adding repo\""
+    print_and_execute "git push -u origin dev"
+
+    title_no_wait "Pushing staging branch to ${FLEET_SCOPE_REPO} ..."
+    print_and_execute "git checkout staging 2>/dev/null || git checkout -b staging"
+    print_and_execute "git push -u origin staging"
+
+    title_no_wait "Pushing prod branch to ${FLEET_SCOPE_REPO} ..."
+    print_and_execute "git checkout prod 2>/dev/null || git checkout -b prod"
+    print_and_execute "git push -u origin prod"
+else
+    title_no_wait "Can not find ${BASE_DIR}/${TEMPLATE_FLEET_SCOPE_REPO}. Exiting"
+    print_and_execute "exit 1"
+fi
+
+#Secure staging and prod branch but disallowing direct push to them
+title_no_wait "Applying branch protection..."
+print_and_execute "curl -s -X PUT -u $GITHUB_USER:$TOKEN -H \"Accept: application/vnd.github.v3+json\" \
+https://api.github.com/repos/$GITHUB_ORG/$FLEET_SCOPE_REPO/branches/staging/protection \
+ -d \"{ \
+      \\\"restrictions\\\": null,\\\"required_status_checks\\\": null, \
+      \\\"required_pull_request_reviews\\\" : {\\\"dismissal_restrictions\\\": {}, \
+      \\\"dismiss_stale_reviews\\\": false,\\\"require_code_owner_reviews\\\": true,\
+      \\\"required_approving_review_count\\\": 1,\\\"bypass_pull_request_allowances\\\": {}}, \
+      \\\"enforce_admins\\\": true
+      }\" \
+      "
+
+print_and_execute "curl -s -X PUT -u $GITHUB_USER:$TOKEN -H \"Accept: application/vnd.github.v3+json\" \
+https://api.github.com/repos/$GITHUB_ORG/$FLEET_SCOPE_REPO/branches/prod/protection \
+ -d \"{ \
+      \\\"restrictions\\\": null,\\\"required_status_checks\\\": null, \
+      \\\"required_pull_request_reviews\\\" : {\\\"dismissal_restrictions\\\": {}, \
+      \\\"dismiss_stale_reviews\\\": false,\\\"require_code_owner_reviews\\\": true,\
+      \\\"required_approving_review_count\\\": 1,\\\"bypass_pull_request_allowances\\\": {}}, \
+      \\\"enforce_admins\\\": true
+      }\" \
+      "
 
 #Setting up the platform admin project
 title_no_wait "Setting project..."
@@ -630,6 +702,7 @@ print_and_execute "printf ${BILLING_ACCOUNT_ID} | gcloud secrets create gcp-bill
 print_and_execute "printf ${ORG_ID} | gcloud secrets create gcp-org --data-file=-"
 print_and_execute "printf ${INFRA_SETUP_PROJECT_ID} | gcloud secrets create infra-project-id --data-file=-"
 print_and_execute "printf ${ACM_REPO} | gcloud secrets create acm-repo --data-file=-"
+print_and_execute "printf ${FLEET_SCOPE_REPO} | gcloud secrets create fleet-scope-repo --data-file=-"
 print_and_execute "printf ${REGION} | gcloud secrets create infra-region --data-file=-"
 print_and_execute "printf ${SEC_REGION} | gcloud secrets create infra-sec-region --data-file=-"
 print_and_execute "printf ${SECRET_PROJECT_ID} | gcloud secrets create secrets-project --data-file=-"
@@ -672,7 +745,15 @@ print_and_execute "find . -type f -exec  sed -i \"s/YOUR_GITHUB_ORG/${GITHUB_ORG
 sed -i "s?YOUR_SECRET_PROJECT_ID?${SECRET_PROJECT_ID}?" *.yaml
 title_no_wait "Replacing tf bucket in backend.tf in ${TEMPLATE_COMMON_SETUP}..."
 sed -i "s/YOUR_PLATFORM_INFRA_TERRAFORM_STATE_BUCKET/${INFRA_TF_BUCKET}/" env/*/backend.tf
-title_no_wait "Committing and pushing changes to ${TEMPLATE_COMMON_SETUP}..."
+
+
+#Perform sed operation to replace templated variables with real values in fleet-scope-repo
+cd ${TEMP_DIR}/${FLEET_SCOPE_REPO}
+title_no_wait "Checkout dev branch..."
+print_and_execute "git checkout dev"
+title_no_wait "Replacing variables in ${FLEET_SCOPE_REPO}..."
+print_and_execute "sed -i "s?YOUR_SECRET_PROJECT_ID?${SECRET_PROJECT_ID}?" *.yaml"
+
 
 #Perform sed operation to replace templated variables with real values in multi-tenant platform repo
 cd ${TEMP_DIR}/${INFRA_SETUP_REPO}
@@ -696,6 +777,7 @@ if [[ "${TRIGGER_TYPE,,}" == "webhook" ]]; then
     generate_api_key ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER}
     create_webhook ${INFRA_TRIGGER_NAME} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${INFRA_SETUP_REPO}
     create_webhook ${COMMON_TRIGGER_NAME} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${TEMPLATE_COMMON_SETUP}
+    create_webhook ${FLEET_SCOPE_TRIGGER} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${FLEET_SCOPE_REPO}
 elif [[ "${TRIGGER_TYPE,,}" == "github" ]]; then
     gcloud config set project ${INFRA_SETUP_PROJECT_ID}
     title_and_wait "ATTENTION : We need to connect Cloud Build in ${INFRA_SETUP_PROJECT_ID} with your github repo. As of now, there is no way of doing it automatically, press ENTER for instructions for doing it manually."
@@ -711,6 +793,7 @@ elif [[ "${TRIGGER_TYPE,,}" == "github" ]]; then
     title_no_wait "Creating Cloud Build trigger..."
     print_and_execute "gcloud beta builds triggers create github --name=\"${INFRA_TRIGGER_NAME}\"  --repo-owner=\"${GITHUB_ORG}\" --repo-name=\"${INFRA_SETUP_REPO}\" --branch-pattern=\".*\" --build-config=\"cloudbuild-github.yaml\""
     print_and_execute "gcloud beta builds triggers create github --name=\"${COMMON_TRIGGER_NAME}\"  --repo-owner=\"${GITHUB_ORG}\" --repo-name=\"${TEMPLATE_COMMON_SETUP}\" --branch-pattern=\"main\" --build-config=\"cloudbuild-github.yaml\""
+    print_and_execute "gcloud beta builds triggers create github --name=\"${FLEET_SCOPE_TRIGGER}\"  --repo-owner=\"${GITHUB_ORG}\" --repo-name=\"${FLEET_SCOPE_REPO}\" --branch-pattern=\"main\" --build-config=\"cloudbuild-github.yaml\""
 fi
 
 title_no_wait "#######################################################"
@@ -922,7 +1005,7 @@ elif [[ "${TRIGGER_TYPE,,}" == "github" ]]; then
 
     title_no_wait "Creating Cloud Build trigger to add terraform files to create application..."
     print_and_execute "gcloud alpha builds triggers create manual --name=\"${APP_TRIGGER_NAME}\" --repo=\"https://github.com/${GITHUB_ORG}/${APP_SETUP_REPO}\" --build-config=\"add-app-tf-files-github-trigger.yaml\" --branch=\"main\" \
-    --repo-type=\"GITHUB\" --substitutions \"_APP_NAME\"=\"\",\"_APP_RUNTIME\"=\"\",\"_FOLDER_ID\"=\"${FOLDER_ID}\",\"_INFRA_PROJECT_ID\"=\"${INFRA_SETUP_PROJECT_ID}\",\"_REGION\"=\"${REGION}\",\"_TRIGGER_TYPE\"=\"webhook\",\"_GITHUB_TEAM\"=\"\""
+    --repo-type=\"GITHUB\" --substitutions \"_APP_NAME\"=\"\",\"_APP_RUNTIME\"=\"\",\"_FOLDER_ID\"=\"${FOLDER_ID}\",\"_INFRA_PROJECT_ID\"=\"${INFRA_SETUP_PROJECT_ID}\",\"_REGION\"=\"${REGION}\",\"_TRIGGER_TYPE\"=\"webhook\",\"_GITHUB_TEAM\"=\"\",\"_SCOPE\"=\"\""
 
     title_no_wait "Creating Cloud Build trigger for tf-plan..."
     print_and_execute "gcloud alpha builds triggers create manual --name=\"${PLAN_TRIGGER_NAME}\" --repo=\"https://github.com/${GITHUB_ORG}/${APP_SETUP_REPO}\" --branch=\"main\" --build-config=\"tf-plan-github-trigger.yaml\" \
@@ -941,6 +1024,14 @@ git add .
 git config --global user.name ${GITHUB_USER}
 git config --global user.email "${GITHUB_USER}github.com"
 git commit -m "Initial setup"
+git push
+#Committing changes and pushing them to fleet-scope-repo repo
+title_no_wait "Committing and pushing changes to ${FLEET_SCOPE_REPO}..."
+cd ${TEMP_DIR}/${FLEET_SCOPE_REPO}
+git add .
+git config --global user.name ${GITHUB_USER}
+git config --global user.email "${GITHUB_USER}github.com"
+git commit -m "IGNORE: Initial setup"
 git push
 title_no_wait "The push to the ${TEMPLATE_COMMON_SETUP} has started the cloudbuild trigger. Go to https://console.cloud.google.com/cloud-build/builds?project=${INFRA_SETUP_PROJECT_ID} ."
 #Committing changes and pushing them to multi-tenant platform repo

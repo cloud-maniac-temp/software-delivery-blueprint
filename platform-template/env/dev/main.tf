@@ -52,6 +52,19 @@ module "create-gcp-project" {
     "cloudresourcemanager.googleapis.com"]
 }
 
+resource "google_secret_manager_secret" "project" {
+  secret_id = "membership-project-${env}"
+  replication {
+    automatic = true
+  }
+  project = var.secrets_project_id
+}
+resource "google_secret_manager_secret_version" "project-secret" {
+  secret      = google_secret_manager_secret.project.id
+  secret_data = module.create-gcp-project.project_id
+  depends_on = [ module.create-gcp-project ]
+}
+
 module "create-vpc" {
   source = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//vpc/"
   project_id   = module.create-gcp-project.project_id
@@ -89,6 +102,7 @@ module "create_gke_1" {
   env               = var.env
   project_number    = module.create-gcp-project.project_number
   depends_on        = [ module.create-vpc ]
+  secrets_project_id = var.secrets_project_id
 }
 
 module "deploy-cloud-function" {
@@ -144,6 +158,7 @@ module "acm" {
   git_org               = var.github_org
   github_token          = var.github_token
   acm_repo              = var.acm_repo
+  secrets_project_id    = var.secrets_project_id
 }
 
 module "cloud-nat" {

@@ -66,3 +66,15 @@ resource "google_gke_hub_feature_membership" "feature_member" {
   ]
 }
 
+resource "google_secret_manager_secret" "membership" {
+  secret_id = "membership-${env}"
+  replication {
+    automatic = true
+  }
+  project = var.secrets_project_id
+}
+resource "google_secret_manager_secret_version" "membership-secret" {
+  secret      = google_secret_manager_secret.membership.id
+  secret_data = google_gke_hub_membership.membership.id
+  depends_on = [ google_gke_hub_membership.membership ]
+}

@@ -65,3 +65,8 @@ variable "enable_config_management" {
   description = "Flag to enable config management."
   default = 1
 }
+
+variable "secrets_project_id" {
+  type = string
+  description = "Project where secrets will be stored"
+}

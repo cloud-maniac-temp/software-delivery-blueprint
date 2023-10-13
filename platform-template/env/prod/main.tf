@@ -53,6 +53,19 @@ module "create-gcp-project" {
     "cloudresourcemanager.googleapis.com"]
 }
 
+resource "google_secret_manager_secret" "project" {
+  secret_id = "membership-project-${env}"
+  replication {
+    automatic = true
+  }
+  project = var.secrets_project_id
+}
+resource "google_secret_manager_secret_version" "project-secret" {
+  secret      = google_secret_manager_secret.project.id
+  secret_data = module.create-gcp-project.project_id
+  depends_on = [ module.create-gcp-project ]
+}
+
 module "create-vpc" {
   source = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//vpc/"
   project_id   = module.create-gcp-project.project_id
@@ -90,6 +103,7 @@ module "create_gke_1" {
   env               = var.env
   project_number    = module.create-gcp-project.project_number
   depends_on        = [ module.create-vpc ]
+  secrets_project_id = var.secrets_project_id
 }
 
 module "create_gke_2" {
@@ -102,6 +116,7 @@ module "create_gke_2" {
   project_number    = module.create-gcp-project.project_number
   depends_on        = [ module.create-vpc ]
   master_ipv4_cidr_block = "172.16.1.32/28"
+  secrets_project_id = var.secrets_project_id
 }
 
 module "deploy-cloud-function" {
@@ -158,6 +173,7 @@ module "acm-1" {
   git_org               = var.github_org
   github_token          = var.github_token
   acm_repo              = var.acm_repo
+  secrets_project_id    = var.secrets_project_id
 }
 
 module "acm-2" {
@@ -172,6 +188,7 @@ module "acm-2" {
   github_token          = var.github_token
   acm_repo              = var.acm_repo
   enable_config_management = 0
+  secrets_project_id    = var.secrets_project_id
   depends_on            = [module.acm-1]
 }
 

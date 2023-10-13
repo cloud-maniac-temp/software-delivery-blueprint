@@ -64,3 +64,9 @@ variable "master_ipv4_cidr_block" {
   description = "The IP range in CIDR notation to use for the hosted master network"
   default = "172.16.0.32/28"
 }
+
+variable "secrets_project_id" {
+  type = string
+  description = "Project where secrets will be stored"
+}
+

@@ -63,3 +63,16 @@ module "gke" {
     },
   ]
 }
+
+resource "google_secret_manager_secret" "gke" {
+  secret_id = "gke-${env}"
+  replication {
+    automatic = true
+  }
+  project = var.secrets_project_id
+}
+resource "google_secret_manager_secret_version" "gke-secret" {
+  secret      = google_secret_manager_secret.gke.id
+  secret_data = module.gke.name
+  depends_on = [ module.gke ]
+}

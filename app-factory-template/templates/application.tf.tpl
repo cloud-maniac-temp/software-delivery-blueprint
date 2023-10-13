@@ -112,7 +112,7 @@ data "google_secret_manager_secret_version" "YOUR_APPLICATION_NAME_trigger-bucke
 
 locals {
     YOUR_APPLICATION_NAME_environments = ["dev", "staging", "prod"]
-    YOUR_APPLICATION_NAME_namespace = zipmap(local.YOUR_APPLICATION_NAME_environments,[for env in local.YOUR_APPLICATION_NAME_environments : "YOUR_APPLICATION_NAME"])
+    YOUR_APPLICATION_NAME_namespace = zipmap(local.YOUR_APPLICATION_NAME_environments,[for env in local.YOUR_APPLICATION_NAME_environments : "YOUR_NAMESPACE"])
     YOUR_APPLICATION_NAME_ksa = zipmap(local.YOUR_APPLICATION_NAME_environments,[for env in local.YOUR_APPLICATION_NAME_environments : "YOUR_APPLICATION_NAME-ksa"])
     YOUR_APPLICATION_NAME_trigger_bucket_dep = zipmap(local.YOUR_APPLICATION_NAME_environments,[for env in local.YOUR_APPLICATION_NAME_environments : "permission-fun-trg-bucket-${env}"])
     YOUR_APPLICATION_NAME_trigger_bucket_sec = "secret-permission-fn-trg-bucket"

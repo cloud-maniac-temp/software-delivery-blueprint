@@ -26,6 +26,7 @@ repo=${8}
 trigger_type=${9}
 github_team=${10}
 region=${11}
+scope=${12}
 cd ${repo}
 
 if [ -z $(find apps -maxdepth 1 -type d -name ${app_runtime}) ]; then
@@ -55,7 +56,11 @@ if [ ! -f apps/${app_runtime}/${app_name}.tf ]; then
   else
     sed -i "s/YOUR_GITHUB_TEAM/${github_team}/g" ${app_name}.tf
   fi
-
+  if [ ${scope} = "null" ]; then
+    sed -i "s/YOUR_NAMESPACE/${app_name}/g" ${app_name}.tf
+  else
+    sed -i "s/YOUR_NAMESPACE/${scope}/g" ${app_name}.tf
+  fi
   git add ${app_name}.tf
   git config --global user.name ${user}
   git config --global user.email ${email}
