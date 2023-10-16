@@ -300,7 +300,7 @@ create_webhook () {
         print_and_execute "exit 1"
     fi
     ## Retrieve the URL
-    if [ "${trigger}" = "${INFRA_TRIGGER_NAME}" ] || [ "${trigger}" = "${COMMON_TRIGGER_NAME}" || "${trigger}" = "${FLEET_SCOPE_TRIGGER}" ]; then
+    if [ "${trigger}" = "${INFRA_TRIGGER_NAME}" ] || [ "${trigger}" = "${COMMON_TRIGGER_NAME}" ] || [ "${trigger}" = "${FLEET_SCOPE_TRIGGER}" ]; then
         WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${project_id}/triggers/${trigger}:webhook?key=${API_KEY}&secret=${SECRET_VALUE}"
 
         title_no_wait "Creating a github trigger ..."
