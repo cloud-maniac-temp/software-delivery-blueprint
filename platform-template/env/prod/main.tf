@@ -54,7 +54,7 @@ module "create-gcp-project" {
 }
 
 resource "google_secret_manager_secret" "project" {
-  secret_id = "membership-project-${env}"
+  secret_id = "membership-project-${var.env}"
   replication {
     auto {}
   }

@@ -9,7 +9,7 @@ data "google_secret_manager_secret_version" "membership-id" {
 }
 
 data "google_secret_manager_secret_version" "membership-project" {
-  secret = "membership-project-${env}"
+  secret = "membership-project-${var.env}"
   project = var.secret_project_id
 }
 

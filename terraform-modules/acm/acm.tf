@@ -67,7 +67,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
 }
 
 resource "google_secret_manager_secret" "membership" {
-  secret_id = "membership-${env}"
+  secret_id = "membership-${var.env}"
   replication {
     auto {}
   }
