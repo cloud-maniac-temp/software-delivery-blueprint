@@ -778,6 +778,7 @@ if [[ "${TRIGGER_TYPE,,}" == "webhook" ]]; then
     create_webhook ${INFRA_TRIGGER_NAME} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${INFRA_SETUP_REPO}
     create_webhook ${COMMON_TRIGGER_NAME} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${TEMPLATE_COMMON_SETUP}
     create_webhook ${FLEET_SCOPE_TRIGGER} ${INFRA_SETUP_PROJECT_ID} ${INFRA_PROJECT_NUMBER} ${FLEET_SCOPE_REPO}
+    cp ${FLEET_SCOPE_REPO}/cloudbuild-webhook.yaml /tmp/cloudbuild-webhook.yaml
 elif [[ "${TRIGGER_TYPE,,}" == "github" ]]; then
     gcloud config set project ${INFRA_SETUP_PROJECT_ID}
     title_and_wait "ATTENTION : We need to connect Cloud Build in ${INFRA_SETUP_PROJECT_ID} with your github repo. As of now, there is no way of doing it automatically, press ENTER for instructions for doing it manually."
