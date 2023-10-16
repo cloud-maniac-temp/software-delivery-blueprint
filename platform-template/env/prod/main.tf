@@ -100,7 +100,7 @@ module "create_gke_1" {
   project_id        = module.create-gcp-project.project_id
   suffix            = "1"
   zone              = ["a","b","c"]
-  env               = var.env
+  env               = "${var.env}-1"
   project_number    = module.create-gcp-project.project_number
   depends_on        = [ module.create-vpc ]
   secrets_project_id = var.secrets_project_id
@@ -112,7 +112,7 @@ module "create_gke_2" {
   project_id        = module.create-gcp-project.project_id
   suffix            = "2"
   zone              = ["a","b","c"]
-  env               = var.env
+  env               = "${var.env}-2"
   project_number    = module.create-gcp-project.project_number
   depends_on        = [ module.create-vpc ]
   master_ipv4_cidr_block = "172.16.1.32/28"
@@ -166,7 +166,7 @@ module "acm-1" {
   source                = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//acm/"
   gke_cluster_id        = local.gke_cluster_id_1
   gke_cluster_name      = module.create_gke_1.cluster_name.name
-  env                   = var.env
+  env                   = "${var.env}-1"
   project_id            = module.create-gcp-project.project_id
   git_user              = var.github_user
   git_email             = var.github_email
@@ -180,7 +180,7 @@ module "acm-2" {
   source                = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//acm/"
   gke_cluster_id        = local.gke_cluster_id_2
   gke_cluster_name      = module.create_gke_2.cluster_name.name
-  env                   = var.env
+  env                   = "${var.env}-1"
   project_id            = module.create-gcp-project.project_id
   git_user              = var.github_user
   git_email             = var.github_email
