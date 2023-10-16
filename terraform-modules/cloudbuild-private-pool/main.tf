@@ -101,7 +101,7 @@ resource "google_secret_manager_secret" "private-pool" {
   count = var.store_to_secret_mngr ? 1 : 0
   secret_id = var.secret_name
   replication {
-    automatic = true
+    auto {}
   }
   project = var.secret_project_id
 }

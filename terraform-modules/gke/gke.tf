@@ -67,7 +67,7 @@ module "gke" {
 resource "google_secret_manager_secret" "gke" {
   secret_id = "gke-${env}"
   replication {
-    automatic = true
+    auto {}
   }
   project = var.secrets_project_id
 }
