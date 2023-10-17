@@ -80,7 +80,7 @@ resource "google_secret_manager_secret_version" "membership-secret" {
 }
 
 resource "google_secret_manager_secret" "membership-id" {
-  secret_id = var.suffix == "null" ?   "membership-name-${var.env}" : "membership-name-${var.env}-${var.suffix}"
+  secret_id = var.suffix == "null" ?   "membership-id-${var.env}" : "membership-id-${var.env}-${var.suffix}"
   replication {
     auto {}
   }
