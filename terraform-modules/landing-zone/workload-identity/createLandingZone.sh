@@ -34,7 +34,7 @@ cd ${local_acm_repo}
 if [ ! -d "manifests/apps/${app_name}" ] ; then
   mkdir manifests/apps/${app_name}
   echo "copying the templates"
-  cp templates/_namespace-template/namespace.yaml manifests/apps/${app_name}/namespace.yaml
+  #cp templates/_namespace-template/namespace.yaml manifests/apps/${app_name}/namespace.yaml
   cp templates/_namespace-template/rbac.yaml manifests/apps/${app_name}/rbac.yaml
   cp templates/_namespace-template/network-policy.yaml manifests/apps/${app_name}/network-policy.yaml
   cp templates/_namespace-template/serviceaccount.yaml manifests/apps/${app_name}/serviceaccount-${env}.yaml
@@ -62,3 +62,4 @@ elif [ ! -f "manifests/apps/${app_name}/serviceaccount-${env}.yaml" ] ; then
   git commit -m "Creating namespace and Service account for application ${app_name}"
   git push origin
 fi
+rm -rf ${local_acm_repo}

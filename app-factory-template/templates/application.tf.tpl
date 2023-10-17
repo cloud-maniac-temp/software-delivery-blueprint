@@ -66,6 +66,11 @@ data "google_secret_manager_secret_version" "YOUR_APPLICATION_NAME_acm-repo" {
   project = "YOUR_SECRET_PROJECT_ID"
 }
 
+data "google_secret_manager_secret_version" "YOUR_APPLICATION_NAME_fleet-repo" {
+  secret = "fleet-scope-repo"
+  project = "YOUR_SECRET_PROJECT_ID"
+}
+
 data "google_secret_manager_secret_version" "YOUR_APPLICATION_NAME_private-pool" {
   secret = "private-pool-dev"
   project = "YOUR_SECRET_PROJECT_ID"
@@ -180,6 +185,10 @@ module "YOUR_APPLICATION_NAME-lz-dev" {
   git_org               = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-org.secret_data
   acm_repo              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_acm-repo.secret_data
   git_token             = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-token.secret_data
+  fleet_scope           = YOUR_NAMESPACE
+  fleet_scope_repo      = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_fleet-repo.secret_data
+  members               = [ gushob@google.com ]
+  users                 = "gushob@google.com"
 }
 
 module "YOUR_APPLICATION_NAME-lz-staging" {
@@ -197,6 +206,10 @@ module "YOUR_APPLICATION_NAME-lz-staging" {
   acm_repo              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_acm-repo.secret_data
   git_token             = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-token.secret_data
   depends_on            = [module.YOUR_APPLICATION_NAME-lz-dev]
+  fleet_scope           = YOUR_NAMESPACE
+  fleet_scope_repo      = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_fleet-repo.secret_data
+  members               = [ gushob@google.com ]
+  users                 = "gushob@google.com"
 }
 
 
@@ -215,6 +228,10 @@ module "YOUR_APPLICATION_NAME-lz-prod" {
   acm_repo              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_acm-repo.secret_data
   git_token             = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-token.secret_data
   depends_on            = [module.YOUR_APPLICATION_NAME-lz-staging]
+  fleet_scope           = YOUR_NAMESPACE
+  fleet_scope_repo      = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_fleet-repo.secret_data
+  members               = [ gushob@google.com ]
+  users                 = "gushob@google.com"
 }
 
 module "YOUR_APPLICATION_NAME-cicd-repo" {

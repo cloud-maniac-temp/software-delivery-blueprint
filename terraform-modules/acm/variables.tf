@@ -70,3 +70,9 @@ variable "secrets_project_id" {
   type = string
   description = "Project where secrets will be stored"
 }
+
+variable "suffix" {
+  type = string
+  description = "Suffix to add while creating secrets for memberships"
+  default = "null"
+}

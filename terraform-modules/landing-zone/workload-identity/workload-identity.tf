@@ -12,6 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+module "create-fleet-scope" {
+  source = "git::https://github.com/cloud-maniac-temp/terraform-modules.git//fleet-scope/render"
+  git_org = var.git_org
+  git_user = var.git_user
+  git_email = var.git_email
+  fleet_scope_repo = var.fleet_scope_repo
+  fleet_scope = var.fleet_scope
+  member_list = var.members
+  users = var.users
+  git_token = var.git_token
+}
+
 resource "null_resource" "set-landing-zone" {
 
   //The trigger is set to timestamp as we want the script to refresh LZ everytime tf is run. This will be helpful in cases this script fails and we need to run terraform again.
@@ -27,6 +39,7 @@ resource "null_resource" "set-landing-zone" {
       "/bin/sh",
     "-c"]
   }
+  depends_on = [module.create-fleet-scope]
 }
 resource "google_service_account_iam_member" "update-workload-identity" {
   service_account_id = var.gsa

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-resource "null_resource" "fleet_scope_renderer" {
-  triggers = {
-    timestamp = timestamp()
+terraform {
+  backend "gcs" {
+    bucket = "YOUR_PLATFORM_INFRA_TERRAFORM_STATE_BUCKET"
+    prefix = "fleet-staging"
   }
-  provisioner "local-exec" {
-    when    = create
-    command = "${path.module}/create_fleet_scope.sh ${var.git_org} ${var.git_user} ${var.git_email} ${var.fleet_scope_repo} ${var.namespace} ${var.member_list} ${var.users}"
-  }
-
 }

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-variable "secrets_project_id" {
-  type = string
-  description = "Project ID of the projects hosting all secrets"
-}
-
-variable "env" {
-  type = string
-  description = "environment"
-  default = "staging"
+terraform {
+  backend "gcs" {
+    bucket = "YOUR_PLATFORM_INFRA_TERRAFORM_STATE_BUCKET"
+    prefix = "fleet-dev"
+  }
 }

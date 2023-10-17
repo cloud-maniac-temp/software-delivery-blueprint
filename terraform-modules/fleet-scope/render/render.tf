@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-variable "secrets_project_id" {
-  type = string
-  description = "Project ID of the projects hosting all secrets"
+locals {
+  mem_list = join(",", var.member_list)
 }
 
-variable "env" {
-  type = string
-  description = "environment"
-  default = "staging"
+
+resource "null_resource" "fleet_scope_renderer" {
+  triggers = {
+    timestamp = timestamp()
+  }
+  provisioner "local-exec" {
+    when    = create
+    command = "${path.module}/create_fleet_scope.sh ${var.git_org} ${var.git_user} ${var.git_email} ${var.git_token} ${var.fleet_scope_repo} ${var.fleet_scope} ${local.mem_list} ${var.users}"
+  }
+
 }

@@ -77,3 +77,23 @@ variable "acm_repo" {
   description = "ACM repository"
   type = string
 }
+
+variable "fleet_scope" {
+  description = "Fleet scope."
+  type        = string
+}
+
+variable "fleet_scope_repo" {
+  description = "Fleet scope repo."
+  type        = string
+}
+
+variable "members" {
+  description = "members to be added"
+  type        = list
+}
+
+variable "users" {
+  description = "users tobe added"
+  type        = string
+}

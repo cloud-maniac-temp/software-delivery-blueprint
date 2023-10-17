@@ -166,7 +166,7 @@ module "acm-1" {
   source                = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//acm/"
   gke_cluster_id        = local.gke_cluster_id_1
   gke_cluster_name      = module.create_gke_1.cluster_name.name
-  env                   = "${var.env}-1"
+  env                   = var.env
   project_id            = module.create-gcp-project.project_id
   git_user              = var.github_user
   git_email             = var.github_email
@@ -174,13 +174,14 @@ module "acm-1" {
   github_token          = var.github_token
   acm_repo              = var.acm_repo
   secrets_project_id    = var.secrets_project_id
+  suffix                = "1"
 }
 
 module "acm-2" {
   source                = "git::https://github.com/YOUR_GITHUB_ORG/terraform-modules.git//acm/"
   gke_cluster_id        = local.gke_cluster_id_2
   gke_cluster_name      = module.create_gke_2.cluster_name.name
-  env                   = "${var.env}-1"
+  env                   = var.env
   project_id            = module.create-gcp-project.project_id
   git_user              = var.github_user
   git_email             = var.github_email
@@ -190,6 +191,7 @@ module "acm-2" {
   enable_config_management = 0
   secrets_project_id    = var.secrets_project_id
   depends_on            = [module.acm-1]
+  suffix                = "2"
 }
 
 module "cloud-nat-1" {

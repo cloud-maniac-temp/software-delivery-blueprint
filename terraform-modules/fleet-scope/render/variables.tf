@@ -13,18 +13,23 @@ variable "git_email" {
   type        = string
 }
 
+variable "git_token" {
+  description = "GitHub token."
+  type        = string
+}
+
 variable "fleet_scope_repo" {
   description = "Fleet scope git repo."
   type        = string
 }
 
-variable "namespace" {
+variable "fleet_scope" {
   type = string
-  description = "Fleet namespace"
+  description = "Fleet scope, will be the same namespace"
 }
 
 variable "member_list" {
-  type = string
+  type = list
   description = "Members who need access on the fleet"
 }
 

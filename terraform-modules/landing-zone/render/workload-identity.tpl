@@ -29,6 +29,10 @@ module "CLUSTER_PROJECT-CLUSTER_NAME" {
   git_org          = var.git_org
   acm_repo         = var.acm_repo
   git_token        = var.git_token
+  fleet_scope      = var.fleet_scope
+  fleet_scope_repo = var.fleet_scope_repo
+  members          = var. members
+  users            = var.users
 }
 
 output "CLUSTER_PROJECT-CLUSTER_NAME" {

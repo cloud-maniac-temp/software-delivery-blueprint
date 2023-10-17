@@ -67,7 +67,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
 }
 
 resource "google_secret_manager_secret" "membership" {
-  secret_id = "membership-${var.env}"
+  secret_id = var.suffix == "null" ?   "membership-name-${var.env}" : "membership-name-${var.env}-${var.suffix}"
   replication {
     auto {}
   }
@@ -75,6 +75,19 @@ resource "google_secret_manager_secret" "membership" {
 }
 resource "google_secret_manager_secret_version" "membership-secret" {
   secret      = google_secret_manager_secret.membership.id
+  secret_data = google_gke_hub_membership.membership.name
+  depends_on = [ google_gke_hub_membership.membership ]
+}
+
+resource "google_secret_manager_secret" "membership-id" {
+  secret_id = var.suffix == "null" ?   "membership-name-${var.env}" : "membership-name-${var.env}-${var.suffix}"
+  replication {
+    auto {}
+  }
+  project = var.secrets_project_id
+}
+resource "google_secret_manager_secret_version" "membership-secret-id" {
+  secret      = google_secret_manager_secret.membership-id.id
   secret_data = google_gke_hub_membership.membership.id
   depends_on = [ google_gke_hub_membership.membership ]
 }
