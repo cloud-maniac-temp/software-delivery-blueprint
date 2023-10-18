@@ -34,7 +34,7 @@ resource "null_resource" "set-landing-zone" {
   }
   provisioner "local-exec" {
     when    = create
-    command = "${path.module}/createLandingZone.sh ${var.git_user} ${var.git_email} ${var.git_token} ${var.git_org} ${var.acm_repo} ${var.app_name} ${var.gsa} ${var.env} ${var.ksa} ${var.cicd_sa}"
+    command = "${path.module}/createLandingZone.sh ${var.git_user} ${var.git_email} ${var.git_token} ${var.git_org} ${var.acm_repo} ${var.app_name} ${var.gsa} ${var.env} ${var.ksa} ${var.cicd_sa} ${var.cicd_sa} ${var.fleet_scope}"
     interpreter = [
       "/bin/sh",
     "-c"]

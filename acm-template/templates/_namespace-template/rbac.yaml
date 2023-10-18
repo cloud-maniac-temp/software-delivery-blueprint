@@ -43,7 +43,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: APP_NAME-FullAccess
-  namespace: APP_NAME
+  namespace: NAMESPACE
 rules:
 - apiGroups:
   - '*'
@@ -62,7 +62,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: APP_NAME-user-access
-  namespace: APP_NAME
+  namespace: NAMESPACE
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
