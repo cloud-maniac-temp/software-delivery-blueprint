@@ -58,6 +58,8 @@ elif [ ! -f "manifests/apps/${app_name}/serviceaccount-${env}.yaml" ] ; then
   find . -type f -name "serviceaccount-${env}.yaml" -exec  sed -i "s?APP_NAME?${app_name}?g" {} +
   find . -type f -name "serviceaccount-${env}.yaml" -exec  sed -i "s?GOOGLE_SERVICE_ACCOUNT?${gsa}?g" {} +
   find . -type f -name "serviceaccount-${env}.yaml" -exec  sed -i "s?KUBERNETES_SERVICE_ACCOUNT?${kubernetes_sa}?g" {} +
+  find . -type f -name "serviceaccount-${env}.yaml" -exec  sed -i "s?NAMESPACE?${fleet_scope}?g" {} +
+
   git config --global user.name ${github_user}
   git config --global user.email ${github_email}
   git add .
