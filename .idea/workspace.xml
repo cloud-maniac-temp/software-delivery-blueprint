@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e53e91f2-6e7e-486e-9b09-64c5bf150d0a" name="Changes" comment="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <change beforePath="$PROJECT_DIR$/app-factory-template/templates/application.tf.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/app-factory-template/templates/application.tf.tpl" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="G3PluginsProjectSettings">
+    <appliedSettings>
+      <entry key="LinkifyInternalShortlinks" value="true" />
+      <entry key="RecognizedNullableAnnotations" value="true" />
+    </appliedSettings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Wdea5zrKg5ubfU7Od13UEKdoJo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TF_FMT": "false",
+    "last_opened_file_path": "/tmp/software-delivery-blueprint"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/fleet-scope-template" />
+      <recent name="$PROJECT_DIR$/fleet-scope-template/env/staging" />
+      <recent name="$PROJECT_DIR$/fleet-scope-template/env/prod" />
+      <recent name="$PROJECT_DIR$/fleet-scope-template/env/dev" />
+      <recent name="$PROJECT_DIR$/terraform-modules/fleet-scope" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/fleet-scope-template" />
+      <recent name="$PROJECT_DIR$/fleet-scope-template/env" />
+      <recent name="$PROJECT_DIR$/multi-tenant-gke-fleet-template" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="software-delivery-blueprint" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="software-delivery-blueprint" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e53e91f2-6e7e-486e-9b09-64c5bf150d0a" name="Changes" comment="" />
+      <created>1697066944924</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1697066944924</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697228882243</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1697228882243</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697466947597</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1697466947597</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697468945382</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1697468945382</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697471254188</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1697471254188</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697476354353</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1697476354353</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697476640341</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697476640341</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697586710283</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1697586710283</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697587001401</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1697587001401</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add support for Fleet scope and namespaces for GKE Enterprise">
+      <created>1697658221608</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1697658221608</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add support for Fleet scope and namespaces for GKE Enterprise" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add support for Fleet scope and namespaces for GKE Enterprise" />
+  </component>
+</project>
