@@ -284,7 +284,7 @@ create_webhook () {
     if [ "${trigger}" = "${TEAM_TRIGGER_NAME}" ]; then
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${TEAM_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-team-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_TEAM_NAME=\$(body.message.team)'"
     elif [ "${trigger}" = "${APP_TRIGGER_NAME}" ]; then
-        print_and_execute "gcloud alpha builds triggers create webhook --name=\"${APP_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-app-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_APP_NAME=\$(body.message.app),_APP_RUNTIME=\$(body.message.runtime),_INFRA_PROJECT_ID=${project_id},_REGION=${REGION},_TRIGGER_TYPE=\$(body.message.trigger_type),_GITHUB_TEAM=\$(body.message.github_team),_SCOPE="",_FOLDER_ID=${FOLDER_ID}'"
+        print_and_execute "gcloud alpha builds triggers create webhook --name=\"${APP_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/add-app-tf-files-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo},_APP_NAME=\$(body.message.app),_APP_RUNTIME=\$(body.message.runtime),_INFRA_PROJECT_ID=${project_id},_REGION=${REGION},_TRIGGER_TYPE=\$(body.message.trigger_type),_GITHUB_TEAM=\$(body.message.github_team),_SCOPE="",_SCOPE_IAM_MEMBERS="",_SCOPE_RBAC_USERS="",_FOLDER_ID=${FOLDER_ID}'"
     elif [ "${trigger}" = "${PLAN_TRIGGER_NAME}" ]; then
         print_and_execute "gcloud alpha builds triggers create webhook --name=\"${PLAN_TRIGGER_NAME}\"  --inline-config=\"${TEMP_DIR}/${repo}/tf-plan-webhook.yaml\" --secret=${SECRET_PATH} --substitutions='_REPO_NAME=${repo}'"
     elif [ "${trigger}" = "${APPLY_TRIGGER_NAME}" ]; then
@@ -1007,7 +1007,7 @@ elif [[ "${TRIGGER_TYPE,,}" == "github" ]]; then
 
     title_no_wait "Creating Cloud Build trigger to add terraform files to create application..."
     print_and_execute "gcloud alpha builds triggers create manual --name=\"${APP_TRIGGER_NAME}\" --repo=\"https://github.com/${GITHUB_ORG}/${APP_SETUP_REPO}\" --build-config=\"add-app-tf-files-github-trigger.yaml\" --branch=\"main\" \
-    --repo-type=\"GITHUB\" --substitutions \"_APP_NAME\"=\"\",\"_APP_RUNTIME\"=\"\",\"_FOLDER_ID\"=\"${FOLDER_ID}\",\"_INFRA_PROJECT_ID\"=\"${INFRA_SETUP_PROJECT_ID}\",\"_REGION\"=\"${REGION}\",\"_TRIGGER_TYPE\"=\"webhook\",\"_GITHUB_TEAM\"=\"\",\"_SCOPE\"=\"\""
+    --repo-type=\"GITHUB\" --substitutions \"_APP_NAME\"=\"\",\"_APP_RUNTIME\"=\"\",\"_FOLDER_ID\"=\"${FOLDER_ID}\",\"_INFRA_PROJECT_ID\"=\"${INFRA_SETUP_PROJECT_ID}\",\"_REGION\"=\"${REGION}\",\"_TRIGGER_TYPE\"=\"webhook\",\"_GITHUB_TEAM\"=\"\",\"_SCOPE\"=\"\",\"_SCOPE_IAM_MEMBERS\"=\"\",\"_SCOPE_RBAC_USERS\"=\"\""
 
     title_no_wait "Creating Cloud Build trigger for tf-plan..."
     print_and_execute "gcloud alpha builds triggers create manual --name=\"${PLAN_TRIGGER_NAME}\" --repo=\"https://github.com/${GITHUB_ORG}/${APP_SETUP_REPO}\" --branch=\"main\" --build-config=\"tf-plan-github-trigger.yaml\" \

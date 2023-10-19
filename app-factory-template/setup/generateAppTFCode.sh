@@ -27,6 +27,8 @@ trigger_type=${9}
 github_team=${10}
 region=${11}
 scope=${12}
+scope_iam_members=${13}
+scope_rbac_users=${14}
 cd ${repo}
 
 if [ -z $(find apps -maxdepth 1 -type d -name ${app_runtime}) ]; then
@@ -45,6 +47,8 @@ if [ ! -f apps/${app_runtime}/${app_name}.tf ]; then
   sed -i "s/YOUR_TRIGGER_TYPE/${trigger_type}/g" ${app_name}.tf
   sed -i "s/YOUR_GITHUB_TEAM/${github_team}/g" ${app_name}.tf
   sed -i "s/YOUR_REGION/${region}/g" ${app_name}.tf
+  sed -i "s/SCOPE_IAM_MEMBERS/${scope_iam_members}/g" ${app_name}.tf
+  sed -i "s/SCOPE_RBAC_USERS/${scope_rbac_users}/g" ${app_name}.tf
 
   if [ ${folder_id} = "null" ]; then
     sed -i '/YOUR_GCP_FOLDER_ID/d' ${app_name}.tf

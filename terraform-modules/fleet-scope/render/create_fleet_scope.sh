@@ -29,7 +29,6 @@ local_fleet_scope_repo="${fleet_scope_repo}-${random}"
 git config --global url."https://${github_user}:${github_token}@github.com".insteadOf "https://github.com"
 git clone https://${github_user}:${github_token}@github.com/${github_org}/${fleet_scope_repo} ${local_fleet_scope_repo}
 cd ${local_fleet_scope_repo}
-ls -lrt >> /workspace/log
 #Adding TF file to dev
 if [ -f env/dev/${fleet_scope}.tf ] ; then
   echo "scope file already exists. It's a NoOp."
