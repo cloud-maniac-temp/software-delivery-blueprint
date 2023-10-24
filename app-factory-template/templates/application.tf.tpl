@@ -178,6 +178,7 @@ module "YOUR_APPLICATION_NAME-lz-dev" {
   ksa                   = local.YOUR_APPLICATION_NAME_ksa["dev"]
   project_id            = module.YOUR_APPLICATION_NAME-admin-seed.project_id
   cicd_sa               = module.YOUR_APPLICATION_NAME-admin-seed.cicd_sa_email
+  clouddeploy_sa        = module.YOUR_APPLICATION_NAME-admin-seed.clouddeploy_sa_email
   env                   = "dev"
   namespace             = local.YOUR_APPLICATION_NAME_namespace["dev"]
   git_user              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-user.secret_data
@@ -198,6 +199,7 @@ module "YOUR_APPLICATION_NAME-lz-staging" {
   ksa                   = local.YOUR_APPLICATION_NAME_ksa["staging"]
   project_id            = module.YOUR_APPLICATION_NAME-admin-seed.project_id
   cicd_sa               = module.YOUR_APPLICATION_NAME-admin-seed.cicd_sa_email
+  clouddeploy_sa        = module.YOUR_APPLICATION_NAME-admin-seed.clouddeploy_sa_email
   env                   = "staging"
   namespace             = local.YOUR_APPLICATION_NAME_namespace["staging"]
   git_user              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-user.secret_data
@@ -220,6 +222,7 @@ module "YOUR_APPLICATION_NAME-lz-prod" {
   ksa                   = local.YOUR_APPLICATION_NAME_ksa["prod"]
   project_id            = module.YOUR_APPLICATION_NAME-admin-seed.project_id
   cicd_sa               = module.YOUR_APPLICATION_NAME-admin-seed.cicd_sa_email
+  clouddeploy_sa        = module.YOUR_APPLICATION_NAME-admin-seed.clouddeploy_sa_email
   env                   = "prod"
   namespace             = local.YOUR_APPLICATION_NAME_namespace["prod"]
   git_user              = data.google_secret_manager_secret_version.YOUR_APPLICATION_NAME_github-user.secret_data

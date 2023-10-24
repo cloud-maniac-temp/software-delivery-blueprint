@@ -44,6 +44,11 @@ variable "cicd_sa" {
   type        = string
 }
 
+variable "clouddeploy_sa" {
+  description = "Cloud Deploy service account for the application"
+  type = string
+}
+
 variable "env" {
   description = "Environment."
   type        = string

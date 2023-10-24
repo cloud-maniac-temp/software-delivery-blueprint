@@ -26,6 +26,7 @@ env=${8}
 kubernetes_sa=${9}
 cicd_sa=${10}
 fleet_scope=${11}
+clouddeploy_sa=${12}
 
 random=$(echo $RANDOM | md5sum | head -c 20; echo)
 local_acm_repo="${acm_repo}-${random}"
@@ -43,7 +44,8 @@ if [ ! -d "manifests/apps/${app_name}" ] ; then
   find . -type f -name "*.yaml" -exec  sed -i "s?APP_NAME?${app_name}?g" {} +
   find . -type f -name "*.yaml" -exec  sed -i "s?GOOGLE_SERVICE_ACCOUNT?${gsa}?g" {} +
   find . -type f -name "*.yaml" -exec  sed -i "s?KUBERNETES_SERVICE_ACCOUNT?${kubernetes_sa}?g" {} +
-  find . -type f -name "*.yaml" -exec  sed -i "s?CICD_SA?${cicd_sa}?g" {} +
+  #find . -type f -name "*.yaml" -exec  sed -i "s?CICD_SA?${cicd_sa}?g" {} +
+  find . -type f -name "*.yaml" -exec  sed -i "s?CLOUDDEPLOY_SA?${clouddeploy_sa}?g" {} +
   find . -type f -name "serviceaccount-${env}.yaml" -exec  sed -i "s?ENV?${env}?g" {} +
   find . -type f -name "*.yaml" -exec  sed -i "s?NAMESPACE?${fleet_scope}?g" {} +
   git config --global user.name ${github_user}

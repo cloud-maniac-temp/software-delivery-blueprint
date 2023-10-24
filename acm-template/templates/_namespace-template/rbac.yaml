@@ -20,7 +20,7 @@ rules:
 - apiGroups:
   - ""
   resourceNames:
-  - serviceAccount:CICD_SA
+  - CLOUDDEPLOY_SA
   resources:
   - users
   verbs:
@@ -69,4 +69,4 @@ roleRef:
   name: APP_NAME-FullAccess
 subjects:
 - kind: User
-  name: serviceAccount:CICD_SA
+  name: CLOUDDEPLOY_SA

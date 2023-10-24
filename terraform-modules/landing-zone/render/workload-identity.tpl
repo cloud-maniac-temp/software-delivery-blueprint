@@ -21,6 +21,7 @@ module "CLUSTER_PROJECT-CLUSTER_NAME" {
   app_name         = var.app_name
   ksa              = var.ksa
   cicd_sa          = var.cicd_sa
+  clouddeploy_sa   = var.clouddeploy_sa
   env              = var.env
   project_id       = var.project_id
   namespace        = var.namespace
