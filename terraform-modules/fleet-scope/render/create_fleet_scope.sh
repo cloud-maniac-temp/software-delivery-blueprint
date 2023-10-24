@@ -47,15 +47,10 @@ if [ -f env/prod/${fleet_scope}.tf ] ; then
 else
   cp fleet-scope-prod.tf.tpl env/prod/${fleet_scope}.tf
 fi
-for i in $(echo $member_list | tr "," "\n")
-do
-  i='"'${i}'"'
-  temp+="$i,"
-done
-member_list=$(echo ${temp} | sed 's/,$//g')
+new_member_list=$(echo ${member_list} | sed -e 's/,/","/g' | sed -e 's/^/"/g' | sed -e 's/$/"/g')
 #Replaceing place holders in TF files
 find env -type f -name ${fleet_scope}.tf -exec  sed -i "s/YOUR_FLEET_SCOPE/${fleet_scope}/g" {} +
-find env -type f -name ${fleet_scope}.tf -exec  sed -i "s/MEMBERS_LIST/${member_list}/g" {} +
+find env -type f -name ${fleet_scope}.tf -exec  sed -i "s/MEMBERS_LIST/${new_member_list}/g" {} +
 find env -type f -name ${fleet_scope}.tf -exec  sed -i "s/YOUR_USERS/${users}/g" {} +
 
 git add .

@@ -32,7 +32,7 @@ module "CLUSTER_PROJECT-CLUSTER_NAME" {
   git_token        = var.git_token
   fleet_scope      = var.fleet_scope
   fleet_scope_repo = var.fleet_scope_repo
-  members          = var. members
+  members          = var.members
   users            = var.users
 }
 
