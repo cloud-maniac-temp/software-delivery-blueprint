@@ -754,6 +754,7 @@ print_and_execute "git checkout dev"
 title_no_wait "Replacing variables in ${FLEET_SCOPE_REPO}..."
 print_and_execute "sed -i "s?YOUR_SECRET_PROJECT_ID?${SECRET_PROJECT_ID}?" *.yaml"
 print_and_execute "sed -i "s?YOUR_REGION?${REGION}?" *.yaml"
+print_and_execute "sed -i "s/YOUR_PLATFORM_INFRA_TERRAFORM_STATE_BUCKET/${INFRA_TF_BUCKET}/" env/*/backend.tf"
 
 
 

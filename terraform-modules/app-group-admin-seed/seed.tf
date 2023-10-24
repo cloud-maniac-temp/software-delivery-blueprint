@@ -168,16 +168,16 @@ resource "google_secret_manager_secret_iam_member" "clouddeploy-sa-secret-access
 }
 
 # Add CloudDeploy SA to GCS so the Cloud Function can provide it roles to deploy to GKE
-resource "google_storage_bucket_object" "gke-deploy" {
-  count = length(var.trigger_buckets_dep)
-  name   = "${var.app_name}-CloudDeploy-SA.txt"
-  content = google_service_account.cloud-deploy[0].email
-  bucket = var.trigger_buckets_dep[count.index]
-}
-resource "time_sleep" "wait_20_seconds_1" {
-  create_duration = "20s"
-  depends_on = [google_storage_bucket_object.gke-deploy]
-}
+//resource "google_storage_bucket_object" "gke-deploy" {
+//  count = length(var.trigger_buckets_dep)
+//  name   = "${var.app_name}-CloudDeploy-SA.txt"
+//  content = google_service_account.cloud-deploy[0].email
+//  bucket = var.trigger_buckets_dep[count.index]
+//}
+//resource "time_sleep" "wait_20_seconds_1" {
+//  create_duration = "20s"
+//  depends_on = [google_storage_bucket_object.gke-deploy]
+//}
 
 # Add CloudDeploy SA to GCS so the Cloud Function can provide it roles to use connect gateway
 resource "google_storage_bucket_object" "gkehub-connect" {
@@ -185,7 +185,7 @@ resource "google_storage_bucket_object" "gkehub-connect" {
   name   = "${var.app_name}-CloudDeploy-SA.txt"
   content = google_service_account.cloud-deploy[0].email
   bucket = var.trigger_bucket_connect[count.index]
-  depends_on = [time_sleep.wait_20_seconds_1]
+  #depends_on = [time_sleep.wait_20_seconds_1]
 }
 
 resource "time_sleep" "wait_20_seconds_4" {
