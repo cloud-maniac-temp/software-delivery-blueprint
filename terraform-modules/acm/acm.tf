@@ -75,7 +75,7 @@ resource "google_secret_manager_secret" "membership" {
 }
 resource "google_secret_manager_secret_version" "membership-secret" {
   secret      = google_secret_manager_secret.membership.id
-  secret_data = google_gke_hub_membership.membership.name
+  secret_data = basename(google_gke_hub_membership.membership.name)
   depends_on = [ google_gke_hub_membership.membership ]
 }
 
