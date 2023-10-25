@@ -40,7 +40,7 @@ resource "google_gke_hub_namespace" "fleet-ns" {
   scope = google_gke_hub_scope.fleet-scope.name
   project = data.google_secret_manager_secret_version.membership-project.secret_data
 }
-
+/*
 resource "google_gke_hub_scope_iam_binding" "scope-iam-binding" {
   project = google_gke_hub_scope.fleet-scope.project
   scope_id = google_gke_hub_scope.fleet-scope.scope_id
@@ -49,7 +49,7 @@ resource "google_gke_hub_scope_iam_binding" "scope-iam-binding" {
     MEMBERS_LIST
   ]
 }
-
+*/
 resource "google_gke_hub_membership_binding" "membership-binding" {
   membership_binding_id = "YOUR_FLEET_SCOPE"
   scope = google_gke_hub_scope.fleet-scope.name
